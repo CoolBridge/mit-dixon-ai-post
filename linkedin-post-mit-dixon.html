@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Daniel Onimisi — MIT Universal AI & The Lessons of Incompetence</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" />
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --ink: #0d0d0d;
+    --page: #f7f4ef;
+    --cream: #ede9e0;
+    --gold: #b8860b;
+    --gold-light: #d4a843;
+    --teal: #1a5f6e;
+    --teal-light: #2a8fa3;
+    --rust: #8b3a2a;
+    --muted: #5a5446;
+    --rule: #c8bfaa;
+  }
+
+  html { font-size: 16px; }
+
+  body {
+    background: var(--page);
+    color: var(--ink);
+    font-family: 'Outfit', sans-serif;
+    font-weight: 300;
+    line-height: 1.75;
+    min-height: 100vh;
+    padding: 2rem 1rem 4rem;
+  }
+
+  .container {
+    max-width: 740px;
+    margin: 0 auto;
+  }
+
+  /* ── MASTHEAD ── */
+  .masthead {
+    border-top: 3px solid var(--ink);
+    border-bottom: 1px solid var(--rule);
+    padding: 1.5rem 0 1rem;
+    margin-bottom: 2.5rem;
+    display: flex;
+    align-items: baseline;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+  .masthead .label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .masthead .pipe { color: var(--rule); }
+
+  /* ── HEADLINE ── */
+  .headline-block {
+    margin-bottom: 2rem;
+    position: relative;
+  }
+  .headline-block::before {
+    content: '';
+    display: block;
+    width: 3px;
+    height: 100%;
+    background: linear-gradient(180deg, var(--gold) 0%, var(--teal) 100%);
+    position: absolute;
+    left: -1.5rem;
+    top: 0;
+  }
+  h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 700;
+    font-size: clamp(1.9rem, 4.5vw, 2.6rem);
+    line-height: 1.15;
+    color: var(--ink);
+    margin-bottom: 0.6rem;
+  }
+  h1 em {
+    font-style: italic;
+    color: var(--teal);
+  }
+  .subtitle {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 1.05rem;
+    color: var(--muted);
+    line-height: 1.5;
+  }
+
+  /* ── DIVIDER ── */
+  .rule {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin: 2rem 0;
+  }
+  .rule::before, .rule::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--rule);
+  }
+  .rule-diamond {
+    width: 6px;
+    height: 6px;
+    background: var(--gold);
+    transform: rotate(45deg);
+  }
+
+  /* ── BODY TEXT ── */
+  p {
+    font-size: 1rem;
+    color: #2a2520;
+    margin-bottom: 1.1rem;
+    font-weight: 300;
+  }
+  p strong {
+    font-weight: 600;
+    color: var(--ink);
+  }
+
+  /* ── DROP CAP ── */
+  .drop-cap::first-letter {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 4.2rem;
+    font-weight: 700;
+    float: left;
+    line-height: 0.82;
+    margin-right: 0.12em;
+    margin-top: 0.08em;
+    color: var(--teal);
+  }
+
+  /* ── SECTION HEADERS ── */
+  .section {
+    margin: 2.5rem 0 0.5rem;
+  }
+  .section-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 0.3rem;
+  }
+  h2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--ink);
+    line-height: 1.25;
+  }
+
+  /* ── LESSON CARDS ── */
+  .lesson-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    margin: 1.5rem 0;
+  }
+  .lesson-card {
+    background: var(--cream);
+    border-left: 3px solid var(--teal);
+    padding: 1rem 1.2rem;
+    position: relative;
+  }
+  .lesson-card.gold-accent {
+    border-left-color: var(--gold);
+  }
+  .lesson-card.rust-accent {
+    border-left-color: var(--rust);
+  }
+  .lesson-num {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.15em;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-bottom: 0.25rem;
+  }
+  .lesson-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: var(--ink);
+    margin-bottom: 0.4rem;
+  }
+  .lesson-body {
+    font-size: 0.88rem;
+    color: #3a342c;
+    line-height: 1.65;
+    margin: 0;
+  }
+
+  /* ── BRIDGE CALLOUT ── */
+  .bridge {
+    background: var(--teal);
+    color: #e8f4f7;
+    padding: 1.4rem 1.6rem;
+    margin: 2rem 0;
+    position: relative;
+    overflow: hidden;
+  }
+  .bridge::before {
+    content: '⟷';
+    position: absolute;
+    right: 1.2rem;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 3rem;
+    opacity: 0.12;
+    color: #fff;
+  }
+  .bridge-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.58rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold-light);
+    margin-bottom: 0.4rem;
+  }
+  .bridge p {
+    color: #ddeef2;
+    font-size: 0.92rem;
+    margin: 0;
+    font-weight: 300;
+  }
+  .bridge strong {
+    color: #fff;
+    font-weight: 500;
+  }
+
+  /* ── PULLQUOTE ── */
+  blockquote {
+    border-top: 1px solid var(--rule);
+    border-bottom: 1px solid var(--rule);
+    padding: 1.2rem 0;
+    margin: 2rem 0;
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 1.3rem;
+    color: var(--teal);
+    line-height: 1.45;
+    text-align: center;
+  }
+  blockquote cite {
+    display: block;
+    font-family: 'Outfit', sans-serif;
+    font-style: normal;
+    font-size: 0.72rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-top: 0.6rem;
+  }
+
+  /* ── AI MODULE CHIPS ── */
+  .chip-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin: 1rem 0 1.5rem;
+  }
+  .chip {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.08em;
+    padding: 0.3rem 0.75rem;
+    border: 1px solid var(--teal);
+    color: var(--teal);
+    border-radius: 2px;
+  }
+  .chip.gold { border-color: var(--gold); color: var(--gold); }
+
+  /* ── SYNTHESIS TABLE ── */
+  .synth-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1.5rem 0;
+    font-size: 0.84rem;
+  }
+  .synth-table thead tr {
+    background: var(--ink);
+    color: var(--page);
+  }
+  .synth-table thead th {
+    padding: 0.6rem 0.8rem;
+    text-align: left;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.58rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    font-weight: 400;
+  }
+  .synth-table tbody tr:nth-child(even) { background: var(--cream); }
+  .synth-table tbody tr:nth-child(odd) { background: #f0ece4; }
+  .synth-table tbody td {
+    padding: 0.65rem 0.8rem;
+    color: #2a2520;
+    line-height: 1.5;
+    vertical-align: top;
+  }
+  .synth-table tbody td:first-child {
+    font-weight: 500;
+    color: var(--teal);
+    font-size: 0.8rem;
+  }
+
+  /* ── CLOSING ── */
+  .closing {
+    background: var(--cream);
+    border-top: 2px solid var(--gold);
+    padding: 1.5rem 1.5rem 1rem;
+    margin-top: 2.5rem;
+  }
+  .closing p { font-size: 0.92rem; }
+  .closing .sig {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.1rem;
+    font-style: italic;
+    color: var(--teal);
+    margin-top: 1rem;
+  }
+
+  /* ── TAGS ── */
+  .tags {
+    margin-top: 1.5rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+  }
+  .tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.6rem;
+    color: var(--muted);
+    letter-spacing: 0.05em;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    border-top: 1px solid var(--rule);
+    margin-top: 2.5rem;
+    padding-top: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  footer span {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.58rem;
+    letter-spacing: 0.12em;
+    color: var(--muted);
+    text-transform: uppercase;
+  }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(18px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .container > * {
+    animation: fadeUp 0.55s ease both;
+  }
+  .container > *:nth-child(1) { animation-delay: 0.05s; }
+  .container > *:nth-child(2) { animation-delay: 0.12s; }
+  .container > *:nth-child(3) { animation-delay: 0.2s; }
+  .container > *:nth-child(4) { animation-delay: 0.28s; }
+  .container > *:nth-child(n+5) { animation-delay: 0.35s; }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="masthead">
+    <span class="label">Daniel Onimisi</span>
+    <span class="pipe">|</span>
+    <span class="label">FSI-AIBR · Founder & Principal Researcher</span>
+    <span class="pipe">|</span>
+    <span class="label">May 2026</span>
+  </div>
+
+  <div class="headline-block">
+    <h1>What a Book About Military Failure Taught Me About <em>Artificial Intelligence</em> — Twenty Years Later</h1>
+    <p class="subtitle">On completing the MIT Open Learning Universal AI Programme, and why Norman Dixon's <em>On the Psychology of Military Incompetence</em> was always, quietly, a leadership manual for the age of intelligent machines.</p>
+  </div>
+
+  <div class="rule"><div class="rule-diamond"></div></div>
+
+  <p class="drop-cap">Nearly twenty years ago, I picked up a book that had nothing to do with epidemiology, machine learning, or Africa's health data infrastructure. It was Norman Dixon's <strong>On the Psychology of Military Incompetence</strong> — a forensic, often ruthless dissection of why intelligent, decorated, ostensibly capable leaders catastrophically failed their men, their missions, and their moments. I was not yet who I am professionally. But something in Dixon's argument lodged deep, like a splinter that takes years to surface.</p>
+
+  <p>This month, I completed the <strong>MIT Open Learning Universal AI Programme</strong> — delivered through the 3MTT/Universal AI initiative — covering the ROAD framework, causal inference, interpretable AI, survival analysis, and Optimal Policy Trees. And somewhere between studying SHAP values and policy tree construction, Dixon surfaced again. Louder this time. More precise.</p>
+
+  <p>The connection, I realised, is not incidental. Dixon wrote about failure dressed as competence. MIT's AI curriculum is, at its core, about building systems that don't fail silently — that are interpretable, causal, and honest about uncertainty. These are the same battle. Different century. Different tools.</p>
+
+  <div class="rule"><div class="rule-diamond"></div></div>
+
+  <div class="section">
+    <div class="section-label">Part I — Dixon's Archive</div>
+    <h2>The Lessons That Never Expired</h2>
+  </div>
+
+  <p>Dixon's thesis was that military incompetence was rarely about stupidity. It was about psychological architecture — about the kind of person who rises through institutions built to reward conformity, and what happens when that person meets a problem that demands creativity, tolerance for ambiguity, and honest self-assessment.</p>
+
+  <p>Here are the lessons that have followed me — and that I now see everywhere, from boardrooms to AI model pipelines to research institutions:</p>
+
+  <div class="lesson-grid">
+
+    <div class="lesson-card">
+      <div class="lesson-num">Lesson 01</div>
+      <div class="lesson-title">Task Specialist vs. Social Specialist — The Leadership Tension That Never Resolves</div>
+      <p class="lesson-body">Dixon observed that great commanders had to be both: technically masterful (task specialists) and humanly attuned (social specialists). The trap was optimising for one. The pure task specialist drives results but fractures teams; the pure social specialist builds cohesion but avoids hard truths. The brilliant leader holds both — and knows which to deploy when. Today, this maps directly onto the tension between data-driven decision-making and stakeholder intelligence. The analyst who can model but cannot communicate is as dangerous as the leader who builds consensus around a wrong conclusion.</p>
+    </div>
+
+    <div class="lesson-card gold-accent">
+      <div class="lesson-num">Lesson 02</div>
+      <div class="lesson-title">Authoritarianism as a Failure Mode, Not a Feature</div>
+      <p class="lesson-body">Dixon traced a pattern: the most catastrophic commanders were often those who equated rigidity with strength. They punished dissent, hoarded information, and mistook their rank for their intelligence. In 2026, this pattern is alive in organisations that deploy AI tools without explainability, that centralise data without transparency, and that confuse model complexity with model wisdom. An authoritarian AI pipeline — one that gives outputs without interpretability — is Dixon's general with a new uniform.</p>
+    </div>
+
+    <div class="lesson-card rust-accent">
+      <div class="lesson-num">Lesson 03</div>
+      <div class="lesson-title">The Overcautious Catastrophe — When Risk-Aversion Becomes the Risk</div>
+      <p class="lesson-body">Some of Dixon's most chilling case studies were not of recklessness but of paralysis — commanders who, afraid to be wrong, waited until being wrong was inevitable. This is the failure mode of excessive caution dressed as prudence. In innovation, in health systems, in policy: the organisation that will not deploy an 80%-ready intervention while 10,000 people suffer has made a choice. It has simply chosen not to name it.</p>
+    </div>
+
+    <div class="lesson-card">
+      <div class="lesson-num">Lesson 04</div>
+      <div class="lesson-title">Intelligence Without Wisdom — The Brilliant Failure</div>
+      <p class="lesson-body">Dixon showed us commanders who were, by any IQ measure, remarkable — and still failed ruinously. What they lacked was the metacognitive capacity to know what they did not know, and the intellectual humility to ask. This is perhaps the central warning of our AI moment: a model can be technically sophisticated and epistemically bankrupt. High accuracy on training data is not wisdom. Knowing when your model should be silent is.</p>
+    </div>
+
+    <div class="lesson-card gold-accent">
+      <div class="lesson-num">Lesson 05</div>
+      <div class="lesson-title">The Sycophancy Pipeline — Institutions That Select Against Truth</div>
+      <p class="lesson-body">Perhaps Dixon's most enduring insight: incompetent leaders are produced, not born. They are selected and elevated by institutions that reward agreement, punish originality, and treat loyalty to hierarchy as a proxy for competence. These institutions build a sycophancy pipeline — where by the time someone reaches command, they are surrounded entirely by people who will not tell them what they need to hear. Sound familiar? It should. Most large organisations still work this way. And some AI systems are being trained to work this way too.</p>
+    </div>
+
+    <div class="lesson-card rust-accent">
+      <div class="lesson-num">Lesson 06</div>
+      <div class="lesson-title">Comfort With Ambiguity as a Survival Skill</div>
+      <p class="lesson-body">The leaders who navigated chaos were not those who eliminated uncertainty — they were those who could act thoughtfully within it. Dixon's great commanders held incomplete information and moved anyway, not carelessly, but with calibrated confidence. This is, in technical terms, operating under epistemic uncertainty without freezing. It is also exactly what Optimal Policy Trees and causal inference frameworks ask of us: make decisions, assign uncertainty honestly, and remain responsive to new evidence.</p>
+    </div>
+
+  </div>
+
+  <div class="rule"><div class="rule-diamond"></div></div>
+
+  <div class="section">
+    <div class="section-label">Part II — The MIT Framework</div>
+    <h2>What the Universal AI Programme Actually Taught</h2>
+  </div>
+
+  <p>The MIT Open Learning curriculum I completed through 3MTT was not a software course. It was, in the deepest sense, an epistemology course — about how we know what we know, how we build systems that make defensible decisions, and how we keep humans meaningfully in the loop when machines are doing the reasoning.</p>
+
+  <div class="chip-row">
+    <span class="chip">ROAD Framework</span>
+    <span class="chip">Causal Inference</span>
+    <span class="chip">Interpretable AI · SHAP</span>
+    <span class="chip">Survival Analysis</span>
+    <span class="chip gold">Optimal Policy Trees</span>
+    <span class="chip gold">Prescriptive Analytics</span>
+  </div>
+
+  <div class="lesson-grid">
+
+    <div class="lesson-card">
+      <div class="lesson-num">MIT Module 01</div>
+      <div class="lesson-title">The ROAD Framework — Decisions Before Data</div>
+      <p class="lesson-body">Reality, Objectives, Alternatives, Decisions. Before you build a model, you define the decision it serves. This sounds obvious. It is almost never done. Most organisations collect data first, then ask what to do with it — which is Dixon's general who deploys troops before reading the terrain. ROAD insists on reversing that order. Know the decision. Then build the intelligence.</p>
+    </div>
+
+    <div class="lesson-card gold-accent">
+      <div class="lesson-num">MIT Module 02</div>
+      <div class="lesson-title">Causal Inference — Correlation Was Never the Point</div>
+      <p class="lesson-body">Randomised experiments are not always possible. In public health, in policy, in business — we often have observational data and must reason carefully about what causes what. Causal inference is the discipline of doing that honestly. It refuses to let you hide behind correlation. It demands you specify your assumptions, test them where possible, and be explicit about what you cannot know. That is intellectual courage. Dixon would have called it the opposite of military incompetence.</p>
+    </div>
+
+    <div class="lesson-card rust-accent">
+      <div class="lesson-num">MIT Module 03</div>
+      <div class="lesson-title">Interpretable AI — The Explainability Imperative</div>
+      <p class="lesson-body">A model that cannot explain its reasoning is a black box with authority it has not earned. Interpretable AI — using tools like SHAP, LIME, and transparent model architectures — insists that the humans who use AI systems understand what is driving outcomes. This is not a technical nicety. In health, in policy, in law: the inability to explain a decision made by a machine is a governance failure. Dixon's sycophancy pipeline, but automated.</p>
+    </div>
+
+    <div class="lesson-card">
+      <div class="lesson-num">MIT Module 04</div>
+      <div class="lesson-title">Survival Analysis — Time Is a Variable, Not a Backdrop</div>
+      <p class="lesson-body">Survival analysis models time-to-event data — when something happens, not just whether it happens. In malaria, in clinical trials, in customer retention: the timing of an outcome matters enormously. This discipline taught me to think about trajectories, not snapshots. Incompetent commanders, Dixon noted, assessed situations as static. Great ones understood momentum — which is, mathematically, what survival analysis captures.</p>
+    </div>
+
+    <div class="lesson-card gold-accent">
+      <div class="lesson-num">MIT Module 05</div>
+      <div class="lesson-title">Optimal Policy Trees — Prescriptive Intelligence With Human Legibility</div>
+      <p class="lesson-body">This was perhaps the most conceptually powerful module. Optimal Policy Trees are not just predictive — they are prescriptive. They don't ask "what will happen?" They ask "what should we do, for whom, and under what conditions?" And they do it transparently, in a decision-tree structure a non-specialist can read and interrogate. This is the synthesis of task mastery and human accountability that Dixon spent an entire book arguing we must achieve.</p>
+    </div>
+
+  </div>
+
+  <div class="rule"><div class="rule-diamond"></div></div>
+
+  <blockquote>
+    "The question is never whether your model is sophisticated. The question is whether it makes the right decision, for the right person, at the right moment — and whether you can explain why."
+    <cite>— A synthesis Dixon would have endorsed</cite>
+  </blockquote>
+
+  <div class="rule"><div class="rule-diamond"></div></div>
+
+  <div class="section">
+    <div class="section-label">Part III — The Convergence</div>
+    <h2>Where Twenty Years of Reading Meets Twenty Weeks of Learning</h2>
+  </div>
+
+  <p>The synthesis is not forced. It is structural. Dixon was writing about decision systems — human ones — and their failure modes. MIT's AI curriculum is building better decision systems — computational ones — designed to avoid those same failure modes. Here is how they map:</p>
+
+  <table class="synth-table">
+    <thead>
+      <tr>
+        <th>Dixon's Failure Pattern</th>
+        <th>AI/Leadership Parallel Today</th>
+        <th>MIT Framework Response</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Task vs. Social imbalance</td>
+        <td>Technical teams that can't communicate; leaders who can't interpret data</td>
+        <td>ROAD: align analytics to human decisions first</td>
+      </tr>
+      <tr>
+        <td>Authoritarianism / opacity</td>
+        <td>Black-box AI deployed without explainability</td>
+        <td>Interpretable AI: SHAP, transparent models</td>
+      </tr>
+      <tr>
+        <td>Overcaution as catastrophe</td>
+        <td>Organisations paralysed by imperfect data waiting for perfect data</td>
+        <td>Optimal Policy Trees: prescribe action under uncertainty</td>
+      </tr>
+      <tr>
+        <td>Intelligence without wisdom</td>
+        <td>High-accuracy models that don't know what they don't know</td>
+        <td>Causal inference: explicit assumptions, honest uncertainty</td>
+      </tr>
+      <tr>
+        <td>Sycophancy pipelines</td>
+        <td>AI trained on feedback that rewards agreement, not accuracy</td>
+        <td>Interpretability + human oversight frameworks</td>
+      </tr>
+      <tr>
+        <td>Static situational assessment</td>
+        <td>Snapshot analytics that miss longitudinal trajectories</td>
+        <td>Survival analysis: model time, not just outcomes</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="bridge">
+    <div class="bridge-label">The Through-Line</div>
+    <p>Dixon's generals failed because their <strong>decision systems</strong> — psychological, institutional, informational — were not built for the complexity of the problems they faced. Today's leaders, researchers, and innovators face the same risk. The tools have changed. The failure modes have not. The MIT curriculum is, in this light, not just technical training. <strong>It is a programme in not becoming Dixon's cautionary tale.</strong></p>
+  </div>
+
+  <div class="rule"><div class="rule-diamond"></div></div>
+
+  <div class="section">
+    <div class="section-label">Part IV — Forward Applications</div>
+    <h2>What This Means for How I Work — and How You Might Too</h2>
+  </div>
+
+  <p>I am applying these synthesised lessons directly across the work I lead at the Femi Samson Institute of Artificial Intelligence and Biomedical Research (FSI-AIBR) — through the Nigeria Malaria Digital Twin, EPIDEXA, and SPARTAN — and in how I think about African health intelligence infrastructure more broadly.</p>
+
+  <div class="lesson-grid">
+
+    <div class="lesson-card">
+      <div class="lesson-num">Application 01</div>
+      <div class="lesson-title">Build for the Decision, Not the Dashboard</div>
+      <p class="lesson-body">Every tool we build at FSI-AIBR must answer: what decision does this enable, and for whom? A beautiful dashboard that doesn't change a district health officer's action is a vanity product. ROAD forces us to start there.</p>
+    </div>
+
+    <div class="lesson-card gold-accent">
+      <div class="lesson-num">Application 02</div>
+      <div class="lesson-title">Interpretability Is Not Optional in African Public Health</div>
+      <p class="lesson-body">When our Malaria Digital Twin assigns risk scores to 774 LGAs, we must be able to explain to a state epidemiologist in Kano why Ungogo scores higher than Dala. SHAP values are not just a technical feature — they are a trust infrastructure.</p>
+    </div>
+
+    <div class="lesson-card rust-accent">
+      <div class="lesson-num">Application 03</div>
+      <div class="lesson-title">Causal Framing in Policy Advocacy</div>
+      <p class="lesson-body">When we present evidence to policymakers, we must distinguish what correlates with malaria burden from what causes it. Rainfall and NDVI are predictors. But the causal chain — through vector density, human behaviour, intervention coverage — must be articulated honestly. Correlation-speak gives policymakers room to misallocate.</p>
+    </div>
+
+    <div class="lesson-card">
+      <div class="lesson-num">Application 04</div>
+      <div class="lesson-title">The Balance of Specialist and Communicator</div>
+      <p class="lesson-body">Dixon's task-social tension is my daily negotiation. I can build models. I must also translate them — to funders, to clinicians, to journalists, to students in SPARTAN. The moment I optimise entirely for technical depth and abandon communicability, I have become Dixon's general. Competent. Dangerous.</p>
+    </div>
+
+    <div class="lesson-card gold-accent">
+      <div class="lesson-num">Application 05</div>
+      <div class="lesson-title">Prescriptive, Not Just Predictive — Across Every Domain</div>
+      <p class="lesson-body">The most useful question is rarely "what will happen?" It is "what should we do?" Optimal Policy Trees formalise this for healthcare. But the mindset applies to career choices, institutional strategy, research design, and funding decisions. Move from prediction to prescription — and be transparent about the logic.</p>
+    </div>
+
+  </div>
+
+  <div class="rule"><div class="rule-diamond"></div></div>
+
+  <div class="closing">
+    <p>Twenty years after Dixon. Twenty weeks of MIT. One continuous argument: <strong>competence is not enough.</strong> The architecture of how we think — individually, institutionally, algorithmically — determines whether intelligence becomes wisdom or merely sophisticated failure.</p>
+
+    <p>To everyone navigating the AI wave right now: the frameworks matter. But so does the book you read twenty years ago. The synthesis between them is where the real work lives.</p>
+
+    <p>To my colleagues, collaborators, and the SPARTAN fellows: this is what I mean when I say we are not just building tools. We are building thinking.</p>
+
+    <p class="sig">— Daniel Onimisi<br>Founder & Principal Researcher, FSI-AIBR<br>Nigeria Malaria Digital Twin · EPIDEXA · SPARTAN</p>
+
+    <div class="tags">
+      <span class="tag">#ArtificialIntelligence</span>
+      <span class="tag">#MIT</span>
+      <span class="tag">#Leadership</span>
+      <span class="tag">#PublicHealth</span>
+      <span class="tag">#MalariaDigitalTwin</span>
+      <span class="tag">#CausalInference</span>
+      <span class="tag">#InterpretableAI</span>
+      <span class="tag">#Africa</span>
+      <span class="tag">#3MTT</span>
+      <span class="tag">#FSIAIBR</span>
+      <span class="tag">#SPARTAN</span>
+      <span class="tag">#NormanDixon</span>
+      <span class="tag">#OptimalPolicyTrees</span>
+      <span class="tag">#Innovation</span>
+      <span class="tag">#LifelongLearning</span>
+    </div>
+  </div>
+
+  <footer>
+    <span>FSI-AIBR · Ile-Ife, Nigeria</span>
+    <span>malaria-digital-twin.streamlit.app</span>
+    <span>May 2026</span>
+  </footer>
+
+</div>
+</body>
+</html>
